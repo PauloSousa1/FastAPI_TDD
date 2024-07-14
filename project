@@ -28,3 +28,31 @@ repos:
     rev: 23.3.0
     hooks:
     -   id: black
+
+# Makefile
+run:
+	@uvicorn store.main:app --reload
+
+precommit-install:
+	@poetry run pre-commit install
+
+test:
+	@poetry run pytest
+
+test-matching:
+	@poetry run pytest -s -rx -k $(K) --pdb store ./tests/
+
+ #Docker
+ version: '3'
+
+services:
+  db:
+    image: 'zcube/bitnami-compat-mongodb'
+    ports:
+      - 27017:27017
+    restart: on-failure
+    environment:
+      - MONGODB_ADVERTISED_HOSTNAME=localhost
+      - ALLOW_EMPTY_PASSWORD=yes
+
+    
